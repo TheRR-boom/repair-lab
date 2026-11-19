@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <!-- viewport-fit=cover — обязателен, иначе env(safe-area-inset-*) вернёт нули на iPhone с «чёлкой» -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0b0f14" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>Repair Lab — мастерская ремонта</title>
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <!-- Игровая область. Отступы = safe area (вырез, «чёлка», home-бар). -->
+    <div id="game-root">
+      <div id="game"></div>
+    </div>
+
+    <!-- Подсказка при ландшафте: игра строго портретная -->
+    <div id="rotate-guard" aria-hidden="true">
+      <div class="rotate-phone"></div>
+      <p>Поверните телефон вертикально</p>
+    </div>
+
+    <!-- Сплит-заставка: убирается после загрузки первой сцены -->
+    <div id="boot-splash">
+      <div class="boot-logo">REPAIR<span>LAB</span></div>
+      <div class="boot-sub">мастерская ремонта</div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

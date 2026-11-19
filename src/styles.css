@@ -1,0 +1,141 @@
+/* ==========================================================================
+   Repair Lab — базовые стили мобильного веб-приложения / Capacitor WebView
+   Задача файла: убрать «веб-поведение» (скролл, выделение, зум, подсветку
+   тапов) и отдать всю площадь экрана под canvas с учётом Safe Area.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+  --bg: #0b0f14;
+  --accent: #38e8a0;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", sans-serif;
+}
+
+/* Отступы safe area: на iPhone с вырезом и на Android с жестовой навигацией
+   игровое поле не заезжает под системные элементы. */
+#game-root {
+  position: fixed;
+  inset: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+#game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#game canvas {
+  display: block;
+  touch-action: none;
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   Подсказка «поверните телефон». Игра портретная: в ландшафте не пытаемся
+   переверстать сложный интерфейс, а честно просим повернуть устройство.
+   -------------------------------------------------------------------------- */
+#rotate-guard {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #0b0f14;
+  color: #cfe0ef;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+#rotate-guard p {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.rotate-phone {
+  width: 46px;
+  height: 78px;
+  border: 3px solid var(--accent);
+  border-radius: 10px;
+  animation: rotate-hint 1.8s ease-in-out infinite;
+}
+
+@keyframes rotate-hint {
+  0%,
+  40% {
+    transform: rotate(0deg);
+  }
+  70%,
+  100% {
+    transform: rotate(90deg);
+  }
+}
+
+/* Показываем заглушку только на телефонах в ландшафте (низкий экран) */
+@media (orientation: landscape) and (max-height: 560px) {
+  #rotate-guard {
+    display: flex;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Стартовая заставка
+   -------------------------------------------------------------------------- */
+#boot-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0b0f14;
+  transition: opacity 0.35s ease;
+}
+
+#boot-splash.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot-logo {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #e8f0f8;
+}
+
+.boot-logo span {
+  color: var(--accent);
+}
+
+.boot-sub {
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #5f7488;
+}

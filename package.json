@@ -1,0 +1,30 @@
+{
+  "name": "repair-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Repair Lab — мобильная игра про ремонт телефонов: разборка, диагностика, замена деталей",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test \"tests/*.test.js\"",
+    "android:init": "npx cap add android",
+    "android:sync": "npm run build && npx cap sync android",
+    "android:open": "npx cap open android"
+  },
+  "keywords": [
+    "phaser",
+    "mobile-game",
+    "capacitor",
+    "repair",
+    "simulator"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.8"
+  }
+}
