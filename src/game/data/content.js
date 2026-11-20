@@ -66,7 +66,7 @@ export const TOOLS = {
   probits: {
     id: 'probits',
     name: 'Точные биты',
-    icon: 'wrench',
+    icon: 'icon_wrench',
     price: 220,
     desc: '−50% урона от ошибок.',
   },

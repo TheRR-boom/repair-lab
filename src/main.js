@@ -39,9 +39,9 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) store.flush();
 });
 
-game.events.once(Phaser.Core.Events.READY, () => {
-  layout.start();
-});
+// Layout запускается сразу: размер canvas нужен ещё до первого кадра.
+// Внутри он сам пересчитается на событии READY, когда ScaleManager готов.
+layout.start();
 
 // Для отладки в консоли браузера
 window.__REPAIR_LAB__ = { game, layout, store };

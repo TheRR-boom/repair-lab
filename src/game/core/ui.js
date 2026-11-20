@@ -9,6 +9,11 @@
 
 import { audio } from './audio.js';
 
+/** Достаёт layout из сцены: у BaseScene есть геттер `layout`, у остальных — `L`. */
+export function layoutOf(scene) {
+  return scene.layout || scene.L;
+}
+
 export const C = {
   bg: 0x0b0f14,
   panel: 0x151c25,
@@ -42,7 +47,7 @@ export function money(n) {
 
 /** Текст с масштабированием под экран. size — в дизайн-единицах. */
 export function tx(scene, str, size, opts = {}) {
-  const s = scene.layout ? scene.layout.s : 1;
+  const s = layoutOf(scene).s;
   const style = {
     fontFamily: FONT,
     fontSize: `${Math.max(8, Math.round(size * s))}px`,
@@ -63,7 +68,7 @@ export function tx(scene, str, size, opts = {}) {
 
 /** Иконка из атласа, размер — дизайн-единицы. */
 export function icon(scene, x, y, name, size, alpha = 1) {
-  const s = scene.layout ? scene.layout.s : 1;
+  const s = layoutOf(scene).s;
   const img = scene.add.image(x, y, 'atlas', name);
   img.setDisplaySize(Math.round(size * s), Math.round(size * s));
   img.setAlpha(alpha);
@@ -72,7 +77,7 @@ export function icon(scene, x, y, name, size, alpha = 1) {
 
 /** Панель с закруглением. Локальные координаты: 0,0 — центр. */
 export function panel(scene, w, h, opts = {}) {
-  const s = scene.layout ? scene.layout.s : 1;
+  const s = layoutOf(scene).s;
   const g = scene.add.graphics();
   const r = (opts.radius ?? 16) * s;
   g.fillStyle(opts.fill ?? C.panel, opts.alpha ?? 1);
@@ -86,7 +91,7 @@ export function panel(scene, w, h, opts = {}) {
 
 /** Горизонтальная линия-разделитель длиной w. */
 export function divider(scene, w, color = C.line) {
-  const s = scene.layout ? scene.layout.s : 1;
+  const s = layoutOf(scene).s;
   const g = scene.add.graphics();
   g.lineStyle(Math.max(1, s), color, 1);
   g.lineBetween((-w / 2) * s, 0, (w / 2) * s, 0);
@@ -130,7 +135,12 @@ export class Btn extends Phaser.GameObjects.Container {
 
     this.setSize(this.w, this.h);
     this.setInteractive(
-      new Phaser.Geom.Rectangle((-this.w / 2) * scene.layout.s, (-this.h / 2) * scene.layout.s, this.w * scene.layout.s, this.h * scene.layout.s),
+      new Phaser.Geom.Rectangle(
+        (-this.w / 2) * this.s,
+        (-this.h / 2) * this.s,
+        this.w * this.s,
+        this.h * this.s
+      ),
       Phaser.Geom.Rectangle.Contains
     );
     this.input.cursor = 'pointer';
@@ -144,7 +154,7 @@ export class Btn extends Phaser.GameObjects.Container {
   }
 
   get s() {
-    return this.scene.layout.s;
+    return layoutOf(this.scene).s;
   }
 
   _drawContent() {
@@ -231,7 +241,9 @@ export class Btn extends Phaser.GameObjects.Container {
 
 /** Кружок-иконка для хедера (назад, настройки). */
 export function iconBtn(scene, x, y, name, onClick, size = 44) {
-  const s = scene.layout.s;
+  const s = layoutOf(scene).s;
+  // Визуально кнопка может быть меньше, но палец должен попадать: ≥44 dp
+  const hit = Math.max(size, 44);
   const c = scene.add.container(x, y);
   const bg = scene.add.graphics();
   bg.fillStyle(C.panel2, 1);
@@ -239,9 +251,9 @@ export function iconBtn(scene, x, y, name, onClick, size = 44) {
   c.add(bg);
   const img = icon(scene, 0, 0, name, size * 0.5);
   c.add(img);
-  c.setSize(size * s, size * s);
+  c.setSize(hit * s, hit * s);
   c.setInteractive(
-    new Phaser.Geom.Rectangle((-size / 2) * s, (-size / 2) * s, size * s, size * s),
+    new Phaser.Geom.Rectangle((-hit / 2) * s, (-hit / 2) * s, hit * s, hit * s),
     Phaser.Geom.Rectangle.Contains
   );
   c.on('pointerdown', () => {
@@ -255,7 +267,7 @@ export function iconBtn(scene, x, y, name, onClick, size = 44) {
 
 /** Плашка со значением: иконка + текст. */
 export function pill(scene, x, y, { iconName, text, color = C.text, w = 96, h = 34 }) {
-  const s = scene.layout.s;
+  const s = layoutOf(scene).s;
   const c = scene.add.container(x, y);
   const bg = scene.add.graphics();
   bg.fillStyle(C.panel, 1);
@@ -272,11 +284,16 @@ export function pill(scene, x, y, { iconName, text, color = C.text, w = 96, h = 
   t.setPosition((-w / 2 + (iconName ? 28 : 10)) * s, 0);
   c.add(t);
   c.valueText = t;
-  c.setSize(w * s, h * s);
+  // Плашка низкая, но зона нажатия — не меньше 44 dp по высоте
+  const hitH = Math.max(h, 44);
+  c.setSize(w * s, hitH * s);
   c.setInteractive(
-    new Phaser.Geom.Rectangle((-w / 2) * s, (-h / 2) * s, w * s, h * s),
+    new Phaser.Geom.Rectangle((-w / 2) * s, (-hitH / 2) * s, w * s, hitH * s),
     Phaser.Geom.Rectangle.Contains
   );
+  c.on('pointerdown', () => {
+    audio.vibrate(6);
+  });
   return c;
 }
 
@@ -298,7 +315,7 @@ export class Meter extends Phaser.GameObjects.Container {
   }
 
   get s() {
-    return this.scene.layout.s;
+    return layoutOf(this.scene).s;
   }
 
   _drawTrack() {
@@ -358,8 +375,8 @@ export class Modal {
     this.onClose = opts.onClose || (() => {});
     this.closed = false;
 
-    this.L = scene.layout;
-    this.s = scene.layout.s;
+    this.L = layoutOf(scene);
+    this.s = this.L.s;
     this.root = scene.add.container(0, 0);
     this.root.setDepth(800);
 
@@ -408,6 +425,7 @@ export class Modal {
 
 /** Затемнение фона под модалкой — без блокировки, для оверлеев. */
 export function scrim(scene, alpha = 0.75) {
-  const r = scene.add.rectangle(0, 0, scene.layout.w, scene.layout.h, 0x05080c, alpha).setOrigin(0, 0);
+  const L = layoutOf(scene);
+  const r = scene.add.rectangle(0, 0, L.w, L.h, 0x05080c, alpha).setOrigin(0, 0);
   return r;
 }

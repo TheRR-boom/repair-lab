@@ -158,8 +158,9 @@ export class ReplaceView {
       glow.lineStyle(Math.max(2, 2 * s), C.warn, 0.6);
       glow.strokeRoundedRect(-38 * s, -20 * s, 76 * s, 40 * s, 12 * s);
       glow.setPosition(this.cx, cy);
+      // Зона нажатия 96×56 dp: палец не должен целиться в тонкую полоску
       glow.setInteractive(
-        new Phaser.Geom.Rectangle(-38 * s, -20 * s, 76 * s, 40 * s),
+        new Phaser.Geom.Rectangle(-48 * s, -28 * s, 96 * s, 56 * s),
         Phaser.Geom.Rectangle.Contains
       );
       glow.on('pointerup', () => this.lock());

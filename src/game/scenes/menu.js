@@ -49,7 +49,7 @@ export class MenuScene extends BaseScene {
     root.add(sub);
 
     /* ---------------- Карточка игрока ---------------- */
-    const cardW = dw - 32;
+    const cardW = L.contentW;
     const cardH = 186;
     const cardY = top + 34 * s + 62 * s + cardH * 0.5 * s + 10 * s;
     const card = panel(this, cardW, cardH, { fill: C.panel, radius: 20, stroke: C.line });
@@ -133,7 +133,7 @@ export class MenuScene extends BaseScene {
     const ordersBtn = new Btn(this, {
       x: cx,
       y: btnY,
-      w: dw - 48,
+      w: L.contentW - 16,
       h: 68,
       label: 'ЗАКАЗЫ',
       icon: 'icon_wrench',
@@ -146,7 +146,7 @@ export class MenuScene extends BaseScene {
     });
     root.add(ordersBtn);
 
-    const halfW = (dw - 60) / 2;
+    const halfW = (L.contentW - 28) / 2;
     const rowY = btnY + 86 * s;
 
     const shopBtn = new Btn(this, {

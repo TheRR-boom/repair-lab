@@ -7,8 +7,17 @@ import Phaser from 'phaser';
  * поэтому поворот экрана и смена размера окна не ломают игру.
  */
 export class BaseScene extends Phaser.Scene {
+  /**
+   * Единый геттер на layout: UI-кит (core/ui.js) обращается к `scene.layout`,
+   * сцены — к `this.L`. Это один и тот же объект, поэтому масштаб всегда
+   * совпадает и не зависит от того, кто рисует элемент.
+   */
+  get layout() {
+    return this.registry.get('layout');
+  }
+
   bootView() {
-    this.L = this.registry.get('layout');
+    this.L = this.layout;
     this.state = this.registry.get('save');
     this.store = this.registry.get('store');
     this.s = this.L.s;

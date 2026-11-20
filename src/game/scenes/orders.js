@@ -94,7 +94,7 @@ export class OrdersScene extends BaseScene {
       root.add(empty);
     }
 
-    const cardW = dw - 32;
+    const cardW = L.contentW;
     const cardH = 128;
     let y = 104 * s;
 
@@ -109,7 +109,7 @@ export class OrdersScene extends BaseScene {
     const refresh = new Btn(this, {
       x: cx,
       y: bottomY,
-      w: dw - 48,
+      w: L.contentW - 16,
       h: 56,
       label: 'ОБНОВИТЬ ДОСКУ',
       icon: 'icon_refresh',

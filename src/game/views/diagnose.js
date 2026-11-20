@@ -124,7 +124,8 @@ export class DiagnoseView {
         this.board.add(dot);
       }
 
-      const zone = scene.add.zone(slot.x, slot.y, 72, 72).setOrigin(0.5).setInteractive();
+      // 80 дизайн-единиц ≈ 80 dp: палец уверенно попадает по мелкому компоненту
+      const zone = scene.add.zone(slot.x, slot.y, 80, 80).setOrigin(0.5).setInteractive();
       zone.on('pointerup', () => {
         if (this.pinching) return;
         this.probe(slot.id);

@@ -17,6 +17,8 @@
 export const DESIGN_W = 390;
 export const DESIGN_H = 844;
 
+import Phaser from 'phaser';
+
 export class Layout {
   constructor(game) {
     this.game = game;
@@ -44,6 +46,8 @@ export class Layout {
     if (this._started) return;
     this._started = true;
     this.refresh(true);
+    // До READY ScaleManager может быть не готов — повторим после загрузки
+    this.game.events.once(Phaser.Core.Events.READY, () => this.refresh(true));
 
     const onResize = () => this.schedule();
     window.addEventListener('resize', onResize, { passive: true });
@@ -104,6 +108,9 @@ export class Layout {
     this.dw = w / this.s;
     this.dh = h / this.s;
     this.landscape = w > h * 1.12;
+    // На планшетах не растягиваем контент на всю ширину: строка текста
+    // длиннее ~520 дизайн-единиц читается плохо и выглядит «водянисто».
+    this.contentW = Math.min(this.dw - 32, 520);
 
     this._emit();
     return true;
