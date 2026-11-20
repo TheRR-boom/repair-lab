@@ -39,6 +39,24 @@ Canvas-рендерер, DPR 2) — это не макеты, а реальны�
 Прогресс сохраняется автоматически в `localStorage` (в Capacitor — в WebView),
 при уходе приложения в фон — принудительный `flush`.
 
+## 📲 Готовый APK
+
+Готовый debug-APK собирается автоматически в GitHub Actions и публикуется
+релизом — скачать можно без установки Android Studio:
+
+**[⬇ Скачать repair-lab-debug.apk](https://github.com/TheRR-boom/repair-lab/releases/latest)**
+
+1. Откройте ссылку на телефоне (или скачайте на ПК и передайте файл).
+2. Разрешите «Установку из неизвестных источников» для браузера/проводника.
+3. Откройте скачанный `.apk` → «Установить».
+
+Параметры сборки: `com.repairlab.game`, versionCode 1, minSdk 22 (Android 5.1+),
+targetSdk 34, debug-подпись (для Google Play нужен свой keystore и release-сборка).
+
+Сборка запускается сама на каждый push в `main` и вручную через
+`Actions → Android APK → Run workflow`. Артефакт хранится 30 дней,
+релиз — постоянно.
+
 ## Запуск
 
 ```bash
