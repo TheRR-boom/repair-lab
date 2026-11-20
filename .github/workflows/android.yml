@@ -86,4 +86,4 @@ jobs:
             для Google Play нужен подписанный release-сборка.
           files: artifacts/*.apk
           draft: false
-          prerelease: true
+          prerelease: false

@@ -44,7 +44,10 @@ Canvas-рендерер, DPR 2) — это не макеты, а реальны�
 Готовый debug-APK собирается автоматически в GitHub Actions и публикуется
 релизом — скачать можно без установки Android Studio:
 
-**[⬇ Скачать repair-lab-debug.apk](https://github.com/TheRR-boom/repair-lab/releases/latest)**
+**[⬇ Скачать repair-lab-debug.apk](https://github.com/TheRR-boom/repair-lab/releases/latest)
+
+_Прямая ссылка на текущую сборку:
+[repair-lab-3-debug.apk](https://github.com/TheRR-boom/repair-lab/releases/download/apk-build-3/repair-lab-3-debug.apk) (4.0 МБ)._**
 
 1. Откройте ссылку на телефоне (или скачайте на ПК и передайте файл).
 2. Разрешите «Установку из неизвестных источников» для браузера/проводника.
