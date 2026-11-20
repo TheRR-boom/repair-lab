@@ -1,0 +1,77 @@
+name: Android APK
+
+# Собираем debug-APK в облаке: здесь ubuntu-x64, где нормально работает aapt2.
+# APK прикрепляется к релизу и доступен кнопкой «Assets» на странице релиза.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Установить Android SDK 34
+        run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Зависимости и тесты
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+      - name: Синхронизировать web-сборку с Android
+        run: npx cap sync android
+
+      - name: Собрать debug APK
+        working-directory: android
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Переименовать APK
+        run: |
+          mkdir -p artifacts
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             "artifacts/repair-lab-${{ github.run_number }}-debug.apk"
+          ls -lh artifacts
+
+      - name: Загрузить APK как артефакт
+        uses: actions/upload-artifact@v4
+        with:
+          name: repair-lab-debug-apk
+          path: artifacts/*.apk
+          retention-days: 30
+
+      - name: Прикрепить APK к релизу
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-build-${{ github.run_number }}
+          name: Repair Lab · сборка ${{ github.run_number }}
+          body: |
+            Debug-APK, собранный автоматически из коммита ${{ github.sha }}.
+
+            Установка: скачайте `.apk` ниже, разрешите установку из неизвестного
+            источника и откройте файл. Debug-подпись — нормально для тестов,
+            для Google Play нужен подписанный release-сборка.
+          files: artifacts/*.apk
+          draft: false
+          prerelease: true
