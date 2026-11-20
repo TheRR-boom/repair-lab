@@ -8,7 +8,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test \"tests/*.test.js\"",
+    "test": "node --test tests/*.test.js",
     "android:init": "npx cap add android",
     "android:sync": "npm run build && npx cap sync android",
     "android:open": "npx cap open android"
@@ -29,5 +29,8 @@
   "devDependencies": {
     "@capacitor/cli": "^6.2.3",
     "vite": "^8.3.8"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
